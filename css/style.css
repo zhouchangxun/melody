@@ -1,0 +1,13 @@
+.player{
+    width:100%;
+    height:100%;
+}
+
+.lyric{
+    border:1px solid red;
+        height:70%;
+}
+.control{
+    border:1px solid red;
+    height:30%;
+}
