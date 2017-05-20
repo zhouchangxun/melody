@@ -10,7 +10,7 @@
                 <a ng-click="vo.index=0" class="button" ng-style="{color:vo.index==0?'#32cd32':''}"><i class="fa fa-fw fa-apple"></i>
                  我的歌单</a>
                 <a ng-click="vo.index=1" class="button" ng-style="{color:vo.index==1?'#32cd32':''}"><i class="fa fa-fw fa-child"></i>
-                 热门分类</a>
+                 热门排行</a>
                 <a ng-click="vo.index=2" class="button" ng-style="{color:vo.index==2?'#32cd32':''}"><i class="fa fa-fw fa-diamond"></i>
                  搜索</a>
             </div>
@@ -18,7 +18,7 @@
         </div>
             
         <ion-scroll overflow-scroll="false" ng-style="">
-            <ion-slide-box show-pager="false" active-slide="vo.index" on-slide-changed="vo.index = $index">
+            <ion-slide-box show-pager="false" active-slide="vo.index" on-slide-changed="vo.index = $index; ">
                 <ion-slide>
                 <ion-nav-view name="tab1">
 
@@ -26,17 +26,26 @@
                 </ion-slide>
                             
                 <ion-slide>
-                    <div style="text-align:center;padding:100px;">
+                <ion-nav-view name="tab2">
+            <!--    <div style="text-align:center;padding:100px;">
                         <i class="fa fa-fw fa-child balanced" style="font-size:100px;">2</i>
                                             
-                    </div>
+                    </div> -->
+                    <ng-include src="'page/tab2.html'"></ng-include>
+
+                </ion-nav-view>
                 </ion-slide>
 
                 <ion-slide>
-                    <div style="width:100%;height:1000px;text-align:center;padding:100px;">
-                        <i class="fa fa-fw fa-diamond balanced" style="font-size:100px;">3</i>
+                <ion-slide>
+                <ion-nav-view name="tab3">
+            <!--    <div style="text-align:center;padding:100px;">
+                        <i class="fa fa-fw fa-child balanced" style="font-size:100px;">3</i>
                                             
-                    </div>
+                    </div> -->
+                    <ng-include src="'page/search.html'"></ng-include>
+
+                </ion-nav-view>
                 </ion-slide>
 
             </ion-slide-box>
@@ -49,7 +58,7 @@
     </audio>
   <div class="row row-center ">
     <div class="col col-20 " >
-      <img ng-click="openModal()" style="height:55px;width:55px;"  src="http://sandbox.runjs.cn/uploads/rs/424/omg6xh6h/pic.png" />
+      <img ng-click="openModal()" style="height:55px;width:55px;"  src="http://sandbox.runjs.cn/uploads/rs/424/omg6xh6h/pic.png" ng-src="{{currentMusic.img}}"/>
     </div>
     <div class="col  col-50  " style="text-align:center"><p class="balanced">{{currentMusic.name}}</p>{{currentMusic.singer}}</div>
 

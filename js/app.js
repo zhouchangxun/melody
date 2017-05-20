@@ -15,18 +15,16 @@ var App = angular.module('App', ['ionic'])
     $rootScope.isMenuShown = function(menu) {
         return $rootScope.shownMenu === menu;
     };
-    $rootScope.menus=[{
-        name:'菜单',
-        menus:[{
+    $rootScope.menus=
+        [{
             name:'首页',
             state:'app.home',
-            icon:'icon ion-homew'
+            icon:'ion-home'
         },{
             name:'关于我',
             state:'about',
-            icon:'fa fa-book fa-fw'
-        }]
-      }];
+            icon:'ion-home'
+        }];
       //////////
   $ionicModal.fromTemplateUrl('templates/modal.html', {
     scope: $scope
@@ -61,25 +59,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     })
-   // .state('app.search', {
-   //    url: "/search",
-   //    views: {
-   //      'root': {
-   //        templateUrl: "templates/search.html",
-   //        controller: 'SearchTabCtrl'
-   //      }
-   //    }
-   //  })
-   // .state('app.top10', {
-   //    url: "/top10",
-   //    views: {
-   //      'root': {
-   //        //templateUrl: "templates/top.html",
-   //        templateUrl:"page/about.html",
-   //        controller: 'TopTabCtrl'
-   //      }
-   //    }
-   //  })
+   .state('app.search', {
+      url: "/search",
+      views: {
+        'tab3': {
+          templateUrl: "page/search.html",
+          controller: 'SearchTabCtrl'
+        }
+      }
+    })
+   .state('app.top10', {
+      url: "/top10",
+      views: {
+        'tab2': {
+          //templateUrl: "templates/top.html",
+          templateUrl:"page/about.html",
+          controller: 'TopTabCtrl'
+        }
+      }
+    })
     $urlRouterProvider.otherwise("/app/home");
 })
 .controller('ListTabCtrl', function($rootScope, $scope, $http, $ionicModal) {
@@ -132,13 +130,14 @@ $rootScope.openModal = function() {
     $scope.isPlay=true;
  });
 })
-.controller('mainCtrl', function($scope) {
-  console.log('mainCtrl');
+.controller('mainCtrl', function($scope, $state) {
+    console.log('mainCtrl');
     $scope.$on('switchMusic', function (event, args) {
-     $scope.musicInfo = args.musicInfo;
-     console.log('switch music:',$scope.musicInfo);
-     $scope.$broadcast('onMusicChange',args)
- });
+       $scope.musicInfo = args.musicInfo;
+       console.log('switch music:',$scope.musicInfo);
+       $scope.$broadcast('onMusicChange',args)
+    });
+
 })
 .controller('TopTabCtrl', function($scope) {
   console.log('TopTabCtrl');

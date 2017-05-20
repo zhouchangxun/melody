@@ -26,24 +26,18 @@
 					
         </ion-side-menu-content>  
   
-        <ion-side-menu side="left" style="display:none" ng-style="{display:menus!=null?'block':'none'}">
-            <div class="bar bar-header bar-dark">
-                <h1 class="title">哎呦不错</h1>
-            </div>
-            <ion-content class="has-header">
-                <ul class="list menus">
-                    <div ng-repeat="menu in menus">
-            <!--lvl_1 root menu-->
-                        <li class="item" ng-class="{active:shownMenu == menu}" ng-click="toggleMenu(menu)">
-              <i class="icon" ng-class="{'ion-plus-round':shownMenu != menu,'ion-minus-round':shownMenu == menu}"></i> {{menu.name}}</li>
-            <!--lvl_2 sub menu-->
-            <li ng-show="isMenuShown(menu)" ng-repeat="menu2 in menu.menus" ui-sref="{{menu2.state}}" class="item item-accordion">
-                            <i menu-toggle="left" ng-class="menu2.icon"></i> {{menu2.name}}
-                        </li>
-                    </div>
-                </ul>
-            </ion-content>
-        </ion-side-menu>
+        <ion-side-menu side="left" width="150">
+          <header class="bar bar-header bar-dark">
+          <h1 class="title">menu</h1>
+        </header>
+        <ion-content class="has-header">
+          <ion-list>
+            <ion-item nav-clear menu-close ui-sref="{{menu.state}}" ng-repeat="menu in menus">
+              {{menu.name}}
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ion-side-menu>
 			 
     </ion-side-menus>  
 

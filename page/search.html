@@ -1,0 +1,16 @@
+  <ion-view>
+    <ion-content>
+      <div class="list" style="margin-bottom:0;">
+            <div class="item item-input" style="padding:2px 0 2px 16px;background:#f8f8f8;">
+                <i class="icon ion-ios-search-strong placeholder-icon"></i>
+                <input type="text" ng-model="vo.searchCity" ng-keypress="vc.enter($event)" style="width:100%;" placeholder="请输入歌曲">
+            </div>
+            <div class="item item-divider" id="hot-search">热门搜索</div>
+            <div class="item" style="padding-bottom:6px;white-space:normal;">
+                <button style="margin:0 10px 10px 0;padding:4px 10px;font-size:14px;border:1px solid rgb(221, 221, 221);" ng-repeat="item in [1,2,3,4]" class="button button-small button-stable"><i class="fa fa-fw fa-user"></i> 歌曲{{item}}</button>
+            </div>
+        </div>
+
+      <div style="height:100px;"></div>
+    </ion-content>
+  </ion-view>
