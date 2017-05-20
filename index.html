@@ -1,95 +1,57 @@
-<html ng-app="ionicApp">
+<html ng-app="App">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title>ionic player</title>
-  
     <link href="https://cdn.bootcss.com/ionic/1.3.2/css/ionic.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/ionic/1.3.2/js/ionic.bundle.min.js"></script>
-    <link href="css/style.css" rel="stylesheet">
-    <script src="js/app.js"></script>
+	<script src="js/app.js"></script>
 
+    <script type="text/javascript">
+
+    </script>	
   </head>
-  <body>
-<ion-nav-view class="slide-left-right" >
-</ion-nav-view>
-<script id="templates/root.html" type="text/ng-template">
-<ion-header-bar align-title="center" class="bar-dark">
-  <a class="tab-item" href="#/app/home">
-    我的歌单
-  </a>
 
-  <a class="tab-item" href="#/app/search">
-    搜索
-  </a>
-    <a class="tab-item" href="#/app/top10">
-    关于我
-  </a>
-</ion-header-bar>
-<ion-nav-view name="root"> </ion-nav-view>
-</script>
-    <ion-footer-bar style="height:50px" align-title="center" class="bar-dark">
-<div class="row row-center">
-  <div class="col col-20">
-    <a herf="#" ng-click="openModal()">
-    <img width='40px' height='40px' src="http://sandbox.runjs.cn/uploads/rs/424/omg6xh6h/pic.png" />
-    </a>
-    </div>
-  
-  
-  <div class="col col-80">
-      <div class="player" >
-                
+    <body ng-controller="rootCtrl"> 
+    <ion-side-menus>  
+        <ion-side-menu-content drag-content="false">  
 
-      <audio preload="auto" controls>
-        <source src="http://ws.stream.qqmusic.qq.com/102697748.m4a?fromtag=46">
-      </audio>
-      
-  </div>
-  </div>
-  <!--
-  <div class="col">
-    <a>播放/暂停</a>
-  </div>
-  <div class="col">播放列表
-  </div>
--->
-</div>
-</ion-footer-bar>
-<script id="templates/home.html" type="text/ng-template">
-  <ion-view>
-    <ion-content>
-      <div>
-        <div class="list">
-    <a class="item item-avatar" ng-repeat="music in myMusicList" href="#" ng-click="openModal()" >
-      <img src="{{music.img}}}" />
-        <h2>{{music.name}}</h2>
-        <p>{{music.singer}}</p>
-    </a>
-      </div>
-      </div>
-    </ion-content>
-  </ion-view>
-  </script>
-<script id="templates/search.html" type="text/ng-template">
-  <ion-view>
-    <ion-content>
-      <div>
-    search page
-      </div>
-    </ion-content>
-  </ion-view>
-  </script>
-    <script id="templates/top.html" type="text/ng-template">
-  <ion-view>
-    <ion-content>
-      <div>
-    top 10 page
-      </div>
-    </ion-content>
-  </ion-view>
-  </script>
-    <script id="templates/modal.html" type="text/ng-template">
+
+        <ion-nav-view>          
+            <ion-view> 
+            <ion-content class="balanced-bg">  
+                root view, this area will be rewrite.
+            </ion-content>  
+            </ion-view>
+        </ion-nav-view>
+		
+
+					
+        </ion-side-menu-content>  
+  
+        <ion-side-menu side="left" style="display:none" ng-style="{display:menus!=null?'block':'none'}">
+            <div class="bar bar-header bar-dark">
+                <h1 class="title">哎呦不错</h1>
+            </div>
+            <ion-content class="has-header">
+                <ul class="list menus">
+                    <div ng-repeat="menu in menus">
+            <!--lvl_1 root menu-->
+                        <li class="item" ng-class="{active:shownMenu == menu}" ng-click="toggleMenu(menu)">
+              <i class="icon" ng-class="{'ion-plus-round':shownMenu != menu,'ion-minus-round':shownMenu == menu}"></i> {{menu.name}}</li>
+            <!--lvl_2 sub menu-->
+            <li ng-show="isMenuShown(menu)" ng-repeat="menu2 in menu.menus" ui-sref="{{menu2.state}}" class="item item-accordion">
+                            <i menu-toggle="left" ng-class="menu2.icon"></i> {{menu2.name}}
+                        </li>
+                    </div>
+                </ul>
+            </ion-content>
+        </ion-side-menu>
+			 
+    </ion-side-menus>  
+
+        <script id="templates/modal.html" type="text/ng-template">
       <ion-modal-view>
         <ion-header-bar class="bar bar-header bar-dark">
           <h1 class="title">歌曲名</h1>
@@ -116,5 +78,6 @@
         </ion-content>
       </ion-modal-view>
     </script>
-  </body>
-</html>
+
+	</body>  
+</html> 

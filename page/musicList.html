@@ -1,0 +1,14 @@
+  <ion-view>
+    <ion-content>
+      <div>
+        <div class="list">
+    <a class="item item-avatar" ng-repeat="music in myMusicList"  ng-click="play(music)" >
+      <img ng-src="{{music.img}}}" />
+        <h2>{{music.name}}</h2>
+        <p>{{music.singer}}</p>
+    </a>
+      </div>
+      </div>
+      <div style="height:100px;"></div>
+    </ion-content>
+  </ion-view>
