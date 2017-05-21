@@ -142,6 +142,14 @@ $rootScope.openModal = function() {
 .controller('TopTabCtrl', function($scope) {
   console.log('TopTabCtrl');
 })
-  .controller('SearchTabCtrl', function($scope) {
+.controller('SearchTabCtrl', function($scope, MusicApiService) {
   console.log('SearchTabCtrl');
+  $scope.HotSearchList = [];
+  //MusicApiService.testJsonP();
+  MusicApiService.getHotSearchList()
+  .success(function(data){
+    $scope.HotSearchList=data;
+    if(data.length>10)
+      $scope.HotSearchList=data.splice(0,10);
+  })
 });
