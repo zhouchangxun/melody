@@ -142,7 +142,7 @@ $rootScope.openModal = function() {
 .controller('TopTabCtrl', function($scope) {
   console.log('TopTabCtrl');
 })
-.controller('SearchTabCtrl', function($scope, MusicApiService) {
+.controller('SearchTabCtrl', function($scope,$rootScope, MusicApiService) {
   console.log('SearchTabCtrl');
   $scope.HotSearchList = [];
   $scope.SearchResultList = [];
@@ -169,8 +169,14 @@ $rootScope.openModal = function() {
         name:music.songname,
         singer:music.singer[0].name,
         songid:music.songid,
-        img:MusicApiService.getPictureUrl(music.albummid)
+        img:MusicApiService.getPictureUrl(music.albummid),
       };
+      MusicApiService.getLyric(music.songid)
+      .success(function(data){
+        console.log('lyric:',data);
+        $rootScope.lyric=data;
+      });
+
       console.log('switch search music:',musicInfo);
       $scope.$emit('switchMusic', {'musicInfo':musicInfo});
 
