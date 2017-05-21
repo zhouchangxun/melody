@@ -3,14 +3,23 @@
       <div class="list" style="margin-bottom:0;">
             <div class="item item-input" style="padding:2px 0 2px 16px;background:#f8f8f8;">
                 <i class="icon ion-ios-search-strong placeholder-icon"></i>
-                <input type="text" ng-model="vo.searchCity" ng-keypress="vc.enter($event)" style="width:100%;" placeholder="请输入歌曲">
+                <input type="text" ng-model="keyword" ng-keypress="enter($event,keyword)" style="width:100%;" placeholder="请输入歌曲、歌手">
             </div>
-            <div class="item item-divider" id="hot-search">热门搜索</div>
+            <div class="item item-divider" id="hot-search">热门搜索{{keyword}}</div>
             <div class="item" style="padding-bottom:6px;white-space:normal;">
-                <button style="margin:0 10px 10px 0;padding:4px 10px;font-size:14px;border:1px solid rgb(221, 221, 221);" ng-repeat="item in HotSearchList" class="button button-small button-stable"><i class="fa fa-fw fa-user"></i> {{item.k}}</button>
+                <button style="margin:0 10px 10px 0;padding:4px 10px;font-size:14px;border:1px solid rgb(221, 221, 221);" ng-repeat="item in HotSearchList" class="button button-small button-stable" ng-click="clickHotKeyword(item.k)"> {{item.k}}</button>
             </div>
         </div>
 
+      <div class="list">
+        <a class="item item-avatar" ng-repeat="music in SearchResultList"  ng-click="switchMusic(music)" >
+          <img src="https://y.gtimg.cn/music/photo_new/T002R150x150M000003OCv0N0LnYHf.jpg" ng-src="{{getPictureUrl(music.albummid)}}" />
+            <h2>{{music.songname}}</h2>
+            <p>{{music.singer[0].name}}</p>
+        </a>
+      </div>
+
+     </ion-nav-view>
       <div style="height:100px;"></div>
     </ion-content>
   </ion-view>

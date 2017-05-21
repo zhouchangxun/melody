@@ -145,11 +145,48 @@ $rootScope.openModal = function() {
 .controller('SearchTabCtrl', function($scope, MusicApiService) {
   console.log('SearchTabCtrl');
   $scope.HotSearchList = [];
-  //MusicApiService.testJsonP();
+  $scope.SearchResultList = [];
+  $scope.keyword='';
+
+  $scope.enter = function(event, keyword){
+    if(event.keyCode == 13) {//enter
+      console.log('enter:', keyword);
+      doSearch(keyword);
+    }
+  };
+  $scope.clickHotKeyword = function(keyword){
+      console.log('click keyword:', keyword)
+      doSearch(keyword);
+  };
+  $scope.getPictureUrl=function(albummid){
+    return MusicApiService.getPictureUrl(albummid)
+  };
+  $scope.getAudioUrl=function(songid){
+    return MusicApiService.getAudioUrl(songid)
+  };
+  $scope.switchMusic = function(music){
+      var musicInfo={
+        name:music.songname,
+        singer:music.singer[0].name,
+        songid:music.songid,
+        img:MusicApiService.getPictureUrl(music.albummid)
+      };
+      console.log('switch search music:',musicInfo);
+      $scope.$emit('switchMusic', {'musicInfo':musicInfo});
+
+  };
+  function doSearch(keyword){
+    console.log('start search ',keyword)
+    MusicApiService.doSearch(keyword)
+      .success(function(data){
+        $scope.SearchResultList=data;
+        console.log('search result: ',data)
+    })
+  }
   MusicApiService.getHotSearchList()
-  .success(function(data){
-    $scope.HotSearchList=data;
-    if(data.length>10)
-      $scope.HotSearchList=data.splice(0,10);
-  })
+    .success(function(data){
+      $scope.HotSearchList=data;
+      if(data.length>6)
+        $scope.HotSearchList=data.splice(0,6);
+    })
 });
