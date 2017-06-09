@@ -1,7 +1,9 @@
 <ion-view has-header="false" >
-        <ion-header-bar class="bar-dark" >  
-                <a menu-toggle="left" class="button icon ion-navicon-round"></a>  
-                <h1 class="title">{{AppTitle}}</h1>  
+        <ion-header-bar class="bar-dark" >
+            <div class="buttons">
+                <button menu-toggle="left" class="button icon ion-navicon-round"></button>
+            </div>
+            <h1 class="title">{{AppTitle}}</h1>
         </ion-header-bar>
 
     <ion-content scroll="false"   has-bouncing="true">
@@ -10,7 +12,7 @@
                 <a ng-click="vo.index=0" class="button" ng-style="{color:vo.index==0?'#32cd32':''}"><i class="fa fa-fw fa-apple"></i>
                  我的歌单</a>
                 <a ng-click="vo.index=1" class="button" ng-style="{color:vo.index==1?'#32cd32':''}"><i class="fa fa-fw fa-child"></i>
-                 热门排行</a>
+                 歌词面板</a>
                 <a ng-click="vo.index=2" class="button" ng-style="{color:vo.index==2?'#32cd32':''}"><i class="fa fa-fw fa-diamond"></i>
                  搜索</a>
             </div>

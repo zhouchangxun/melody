@@ -1,10 +1,10 @@
 
 var App = angular.module('App', ['ionic'])  
-    .controller('rootCtrl', function($rootScope, $scope, $state,$ionicModal) {
-      $rootScope.screenWidth = window.screen.availWidth;
-            $rootScope.screenHeight = window.screen.availHeight;
-            $rootScope.AppTitle="音乐播放器";
-               $rootScope.toggleMenu = function(menu) {
+    .controller('rootCtrl', function($rootScope, $scope, $state,$ionicModal, $ionicNavBarDelegate) {
+        $rootScope.screenWidth = window.screen.availWidth;
+        $rootScope.screenHeight = window.screen.availHeight;
+        $rootScope.AppTitle="音乐播放器";
+        $rootScope.toggleMenu = function(menu) {
         if ($rootScope.isMenuShown(menu)) {
             $rootScope.shownMenu = null;
         } else {
@@ -12,29 +12,37 @@ var App = angular.module('App', ['ionic'])
         }
     };
 
-    $rootScope.isMenuShown = function(menu) {
-        return $rootScope.shownMenu === menu;
-    };
-    $rootScope.menus=
-        [{
-            name:'首页',
-            state:'app.home',
-            icon:'ion-home'
-        },{
-            name:'关于我',
-            state:'about',
-            icon:'ion-home'
-        }];
-      //////////
-  $ionicModal.fromTemplateUrl('templates/modal.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $rootScope.modal = modal;
-  });
-    $rootScope.openModal = function() {
-    $scope.modal.show();
-  };
-  //////
+        $rootScope.isMenuShown = function(menu) {
+            return $rootScope.shownMenu === menu;
+        };
+        $rootScope.back = function () {
+            $ionicNavBarDelegate.back()
+        }
+        $rootScope.gotoHome = function () {
+            console.log('go home')
+            $state.go('app.home')
+        }
+        $rootScope.menus=
+            [{
+                name:'首页',
+                state:'app.home',
+                icon:'ion-home'
+            },{
+                name:'关于我',
+                state:'about',
+                icon:'ion-home'
+            }];
+        //////////
+        $ionicModal.fromTemplateUrl('templates/modal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+        $rootScope.modal = modal;
+        });
+        $rootScope.openModal = function() {
+        $scope.modal.show();
+        };
+        //////
 
       console.log('root controller started.');
     });
@@ -142,6 +150,100 @@ $rootScope.openModal = function() {
 .controller('TopTabCtrl', function($scope) {
   console.log('TopTabCtrl');
 })
+.controller('lyricController', function($scope) {
+    console.log('lyricController');
+    $scope.$watch("lyric", function (newVal, oldVal) {
+        if(!$scope.lyric) return;
+        var music={};
+        $player.music=music;
+        music.lyric = parseLyric($scope.lyric);
+        renderLyric(music);
+        console.log('switch lyric:',$scope.lyric);
+    })
+    ///
+    var $player = $("#audio"),
+        player = $player.get(0),
+        lyric_wrap = $(".lyric_wrap"),
+        lyric = lyric_wrap.find("#lyric"),
+        text_temp;
+    function parseLyric(lrc) {
+        var lyrics = lrc.split("\n");
+        var lrcObj = {};
+        for(var i=0;i<lyrics.length;i++){
+            var lyric = decodeURIComponent(lyrics[i]);
+            var timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g;
+            var timeRegExpArr = lyric.match(timeReg);
+            if(!timeRegExpArr)continue;
+            var clause = lyric.replace(timeReg,'');
+
+            for(var k = 0,h = timeRegExpArr.length;k < h;k++) {
+                var t = timeRegExpArr[k];
+                var min = Number(String(t.match(/\[\d*/i)).slice(1)),
+                    sec = Number(String(t.match(/\:\d*/i)).slice(1));
+                var time = min * 60 + sec;
+                lrcObj[time] = clause;
+            }
+        }
+        return lrcObj;
+    }
+
+    function renderLyric(music){
+
+        lyric.html("");
+        var lyricLineHeight = 27,
+            offset = lyric_wrap.offset().top*0.4;
+        console.log('offset:',offset);
+        var data = music.lyric;
+        if(data){
+            music.lyric.parsed = {};
+            var i = 0;
+            for(var k in data){
+                var txt = data[k];
+                if(!txt)txt = " ";
+                music.lyric.parsed[k] = {
+                    index:i++,
+                    text:txt,
+                    top: i*lyricLineHeight-offset
+                };
+                var li = $("<li>"+txt+"</li>");
+                lyric.append(li);
+            }
+            $player.bind("timeupdate",updateLyric);
+
+        }else{
+            lyric.html("<li style='text-align: center'>歌词加载失败</li>");
+        }
+    }
+
+    function updateLyric(){
+        var data = $player.music.lyric.parsed;
+        if(!data)return;
+        var currentTime = Math.round(this.currentTime);
+        var lrc = data[currentTime];
+        if(!lrc)return;
+        var text = lrc.text;
+        if(text != text_temp){
+            locationLrc(lrc);
+            text_temp = text;
+        }
+        function locationLrc(lrc){
+            //console.log('current:',lrc);
+            lyric_wrap.find(" .on").removeClass("on");
+
+            var li = lyric_wrap.find("li:nth-child("+(lrc.index+1)+")");
+
+            li.addClass("on");
+
+            var top = Math.min(-50,-lrc.top)+50;
+
+            //lyric.css({"-webkit-transform":"translate(0,-"+lrc.top+"px)"});
+            //console.log('top',top);
+            lyric.css({"margin-top":top});
+        }
+    }
+
+    ///
+})
 .controller('SearchTabCtrl', function($scope,$rootScope, MusicApiService) {
   console.log('SearchTabCtrl');
   $scope.HotSearchList = [];
@@ -173,7 +275,7 @@ $rootScope.openModal = function() {
       };
       MusicApiService.getLyric(music.songid)
       .success(function(data){
-        console.log('lyric:',data);
+        //console.log('lyric:',data);
         $rootScope.lyric=data;
       });
 

@@ -3,7 +3,7 @@ App.service('MusicApiService', function ($q, $http, $base64) {
 	var api={
 		getHotSearchList:"http://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg?format=jsonp",
 		getsearchUrl:function(keyword){
-			return 'http://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp?format=jsonp&n=5&w=' + keyword;
+			return 'http://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp?format=jsonp&n=10&w=' + keyword;
 		},
 		getPictureUrl:function(albummid){
 			return 'http://y.gtimg.cn/music/photo_new/T002R150x150M000'+

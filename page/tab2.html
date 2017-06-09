@@ -1,12 +1,48 @@
   <ion-view>
-    <ion-content>
-    
-        <div style="text-align:center;padding:100px;">
-            <i class="fa fa-fw fa-child balanced" style="font-size:100px;">
-              blabla</i>
-                                
-        </div>  
+    <ion-content >
+        <div class="row row-center lyric" ng-controller="lyricController">
+                <div class="col">
+                    <style type="text/css">
+                        .panel_lyric {
+                            color: #bbbbbb;
+                        }
+                        .panel_lyric .lyric_wrap {
+                            position: absolute;
+                            bottom: 15px;
+                            left: 0;
+                            width: 100%;
+                            top: 50px;
+                            overflow: hidden;
+                            height:500px;
+                        }
+                        .panel_lyric .lyric_wrap #lyric {
+                            padding: 5px;
+                            -webkit-transition: 500ms ease-out;
+                            margin-top:-10px;
+                        }
+                        .panel_lyric .lyric_wrap #lyric li {
+                            text-align: center;
+                            font-size: 15px;
+                            padding: 5px 0;
+                        }
+                        .panel_lyric .lyric_wrap #lyric li.on {
+                            font-weight: bold;
+                            color: #36a3e1;
 
+                        }
+                    </style>
+                    <div class="panel_lyric">
+                        <div class="lyric_wrap">
+                            <ul id="lyric">
+                                <li>HTML5 music player</li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+        </div>
       <div style="height:100px;"></div>
     </ion-content>
   </ion-view>

@@ -16,7 +16,7 @@
 
 
         <ion-nav-view>          
-     
+            <!--root view-->
         </ion-nav-view>
 		
 
@@ -39,7 +39,7 @@
     </ion-side-menus>  
 
     <script id="templates/modal.html" type="text/ng-template">
-      <ion-modal-view>
+      <ion-modal-view >
         <ion-header-bar class="bar bar-header bar-dark">
           <h1 class="title">歌曲名</h1>
             <button class="button button-clear button-primary" ng-click="modal.hide()"><i class="ion-chevron-down"></i></button>
@@ -49,10 +49,7 @@
         <ion-content class="padding">
           <div class="row row-center lyric">
             <div class="col">
-              
-            歌词面板
-           <pre>{{lyric}}</pre>
-            </div>
+
           </div>
          <div class="row row-center control">
             <div class="col">
@@ -60,11 +57,12 @@
              播放控制条
             </div>
           </div>
-               
-               
+
+          </div>
         </ion-content>
       </ion-modal-view>
     </script>
 
-	</body>  
+	</body>
+
 </html> 
