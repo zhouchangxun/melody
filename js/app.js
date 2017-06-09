@@ -33,14 +33,14 @@ var App = angular.module('App', ['ionic'])
                 icon:'ion-home'
             }];
         //////////
-        $ionicModal.fromTemplateUrl('templates/modal.html', {
+        $ionicModal.fromTemplateUrl('page/about.html', {
             scope: $scope,
             animation: 'slide-in-up'
         }).then(function(modal) {
-        $rootScope.modal = modal;
+            $rootScope.modal = modal;
         });
         $rootScope.openModal = function() {
-        $scope.modal.show();
+            $scope.modal.show();
         };
         //////
 
@@ -88,7 +88,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     })
     $urlRouterProvider.otherwise("/app/home");
 })
-.controller('ListTabCtrl', function($rootScope, $scope, $http, MusicApiService, $ionicModal) {
+.controller('ListTabCtrl', function($rootScope, $scope, $http, MusicApiService) {
     console.log('ListTabCtrl');
     $scope.myMusicList=[];
     getMyMusicList();
@@ -96,7 +96,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
         var url="api/list.json";
         $http.get(url, {}).then(function success(data){
             $scope.myMusicList = data.data;
-            console.log("list:",$scope.myMusicList);
+            var music = $scope.myMusicList[0];
+            console.log("default music:");
+            // $scope.$emit('switchMusic', {'musicInfo':music});
         }, function error(data){
             ;
         });
@@ -107,26 +109,27 @@ App.config(function($stateProvider, $urlRouterProvider) {
             .success(function(data){
                 //console.log('lyric:',data);
                 $rootScope.lyric=data;
+            })
+            .error(function(data){
+                $rootScope.lyric="";
+                console.info('lyric: no found! music:',music);
             });
         $scope.$emit('switchMusic', {'musicInfo':music});
 
     }
 
-    $ionicModal.fromTemplateUrl('templates/modal.html', {
-        scope: $scope
-      }).then(function(modal) {
-        $rootScope.modal = modal;
-    });
-    $rootScope.openModal = function() {
-        $scope.modal.show();
-    };
-
 })
 .controller('playController', function($scope) {
-  $scope.currentMusic = {name:'empty',singer:'empty'}
+  $scope.currentMusic = {name:'当前无播放歌曲',singer:''}
   $scope.isPlay=false;
+  var $player = $('#audio');
+  $player.bind("ended",function (event) {
+      console.log('music end...',$scope.isPlay)
+      $scope.isPlay=false;
+  });
   console.log('playController');
   $scope.play1=function  (needPlay) {
+      console.log('isPlay?...',$scope.isPlay)
     var audio = document.getElementById('audio');
 
     if(needPlay)
