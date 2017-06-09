@@ -88,7 +88,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
     })
     $urlRouterProvider.otherwise("/app/home");
 })
-.controller('ListTabCtrl', function($rootScope, $scope, $http, $ionicModal) {
+.controller('ListTabCtrl', function($rootScope, $scope, $http, MusicApiService, $ionicModal) {
     console.log('ListTabCtrl');
     $scope.myMusicList=[];
     getMyMusicList();
@@ -101,19 +101,25 @@ App.config(function($stateProvider, $urlRouterProvider) {
             ;
         });
     }
-    $scope.play = function(musicName){
-      console.log('play:',musicName);
-      $scope.$emit('switchMusic', {'musicInfo':musicName});
+    $scope.play = function(music){
+        console.log('play:',music);
+        MusicApiService.getLyric(music.songid)
+            .success(function(data){
+                //console.log('lyric:',data);
+                $rootScope.lyric=data;
+            });
+        $scope.$emit('switchMusic', {'musicInfo':music});
 
     }
+
     $ionicModal.fromTemplateUrl('templates/modal.html', {
         scope: $scope
       }).then(function(modal) {
         $rootScope.modal = modal;
-});
-$rootScope.openModal = function() {
-    $scope.modal.show();
-};
+    });
+    $rootScope.openModal = function() {
+        $scope.modal.show();
+    };
 
 })
 .controller('playController', function($scope) {
@@ -158,7 +164,7 @@ $rootScope.openModal = function() {
         $player.music=music;
         music.lyric = parseLyric($scope.lyric);
         renderLyric(music);
-        console.log('switch lyric:',$scope.lyric);
+        console.log('switch lyric');
     })
     ///
     var $player = $("#audio"),
