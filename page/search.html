@@ -5,7 +5,7 @@
                 <i class="icon ion-ios-search-strong placeholder-icon"></i>
                 <input type="text" ng-model="keyword" ng-keypress="enter($event,keyword)" style="width:100%;" placeholder="请输入歌曲、歌手">
             </div>
-            <div class="item item-divider" id="hot-search">热门搜索{{keyword}}</div>
+            <div class="item item-divider" id="hot-search">热门搜索</div>
             <div class="item" style="padding-bottom:6px;white-space:normal;">
                 <button style="margin:0 10px 10px 0;padding:4px 10px;font-size:14px;border:1px solid rgb(221, 221, 221);" ng-repeat="item in HotSearchList" class="button button-small button-stable" ng-click="clickHotKeyword(item.k)"> {{item.k}}</button>
             </div>
