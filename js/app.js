@@ -105,6 +105,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
     }
     $scope.play = function(music){
         console.log('play:',music);
+        var lyric_wrap = $(".lyric_wrap"),
+            lyric = lyric_wrap.find("#lyric");
+        lyric.html("<li style='text-align: center' id='loading-lyric-text'>正在加载歌词 ...</li>");
         MusicApiService.getLyric(music.songid)
             .success(function(data){
                 //console.log('lyric:',data);
@@ -220,7 +223,7 @@ App.config(function($stateProvider, $urlRouterProvider) {
             $player.bind("timeupdate",updateLyric);
 
         }else{
-            lyric.html("<li style='text-align: center'>歌词加载失败</li>");
+            lyric.html("<li style='text-align: center'>歌词加载失败 -_-!</li>");
         }
     }
 
@@ -282,6 +285,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
         songid:music.songid,
         img:MusicApiService.getPictureUrl(music.albummid),
       };
+      var lyric_wrap = $(".lyric_wrap"),
+          lyric = lyric_wrap.find("#lyric");
+      lyric.html("<li style='text-align: center' id='loading-lyric-text'>正在加载歌词 ...</li>");
       MusicApiService.getLyric(music.songid)
       .success(function(data){
         //console.log('lyric:',data);
