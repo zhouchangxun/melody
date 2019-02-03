@@ -104,7 +104,9 @@ App.config(function($stateProvider, $urlRouterProvider) {
         });
     }
     $scope.play = function(music){
-        console.log('play:',music);
+        console.log('play:', music);
+        MusicApiService.getAudioUrl(music.songid);
+
         var lyric_wrap = $(".lyric_wrap"),
             lyric = lyric_wrap.find("#lyric");
         lyric.html("<li style='text-align: center' id='loading-lyric-text'>正在加载歌词 ...</li>");
@@ -141,20 +143,23 @@ App.config(function($stateProvider, $urlRouterProvider) {
       audio.pause()
   };
   $scope.$on('onMusicChange', function (event, args) {
-     $scope.currentMusic = args.musicInfo;
+    console.log('[playController][onMusicChange] recv event:', $scope.musicInfo);
+    $scope.currentMusic = args.musicInfo;
+
     var audio = document.getElementById('audio');
-    $scope.currentMusic.musicURL = 'http://ws.stream.qqmusic.qq.com/'+$scope.currentMusic.songid+'.m4a?fromtag=46'
-    console.log('onMusicChange',$scope.currentMusic); 
     $('#audio').attr("src",$scope.currentMusic.musicURL);
     audio.play()
     $scope.isPlay=true;
+
+    console.log('[playController][onMusicChange] playing ',$scope.currentMusic.name);
  });
 })
 .controller('mainCtrl', function($scope, $state) {
-    console.log('mainCtrl');
+    console.log('[controller] mainCtrl started.');
+    
     $scope.$on('switchMusic', function (event, args) {
        $scope.musicInfo = args.musicInfo;
-       console.log('switch music:',$scope.musicInfo);
+       console.log('[mainCtrl][broadcast] switch music:',$scope.musicInfo);
        $scope.$broadcast('onMusicChange',args)
     });
 
@@ -282,20 +287,34 @@ App.config(function($stateProvider, $urlRouterProvider) {
       var musicInfo={
         name:music.songname,
         singer:music.singer[0].name,
-        songid:music.songid,
-        img:MusicApiService.getPictureUrl(music.albummid),
+        songid:music.songmid
       };
+
+      // get img url
+      musicInfo.img = MusicApiService.getPictureUrl(music.albummid);
+
+
+      // async get lyric
       var lyric_wrap = $(".lyric_wrap"),
           lyric = lyric_wrap.find("#lyric");
       lyric.html("<li style='text-align: center' id='loading-lyric-text'>正在加载歌词 ...</li>");
-      MusicApiService.getLyric(music.songid)
+      
+      MusicApiService.getLyric(musicInfo.songid)
       .success(function(data){
         //console.log('lyric:',data);
         $rootScope.lyric=data;
       });
+      
+      // async get audio url 
+      console.log('[start] fetch audio url for ', musicInfo.name);
+      MusicApiService.getAudioUrl(music.songmid)
+      .success(function(data){
+        console.log('[finish] fetch audio url: ', data);
+        musicInfo.musicURL = data
+        console.log('[event][switchMusic] notify to root');
+        $scope.$emit('switchMusic', {'musicInfo':musicInfo});
+      });
 
-      console.log('switch search music:',musicInfo);
-      $scope.$emit('switchMusic', {'musicInfo':musicInfo});
 
   };
   function doSearch(keyword){
