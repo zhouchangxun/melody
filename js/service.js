@@ -3,22 +3,25 @@ App.service('MusicApiService', function ($q, $http, $base64) {
 	var api={
 		getHotSearchList:"http://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg?format=jsonp",
 		getsearchUrl:function(keyword){
-			return 'http://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp?format=jsonp&n=10&w=' + keyword;
+			return "https://c.y.qq.com/soso/fcgi-bin/client_search_cp?aggr=1&cr=1&flag_qc=0&p=1&n=5&w=" + keyword;
+            //return 'http://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp?format=jsonp&n=10&w=' + keyword;
 		},
 		getPictureUrl:function(albummid){
 			return 'http://y.gtimg.cn/music/photo_new/T002R150x150M000'+
 				albummid+'.jpg'
 		},
-		getAudioUrl:function(songid){
-			return 'http://ws.stream.qqmusic.qq.com/'+
-				songid+'.m4a?fromtag=46'
+		getAudioTokenUrl:function(songid){
+            var get_vk="https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg?format=json205361747&platform=yqq"
+                +"&cid=205361747&songmid="
+                +songid+"&filename=C400"+songid+".m4a&guid=126548448";
+            return get_vk;
 		},
 		getLyricUrl:function(songid){
 			return 'http://api.darlin.me/music/lyric/'+
 				songid+'?format=jsonp'
-		},
-		//{songid}/?&callback=jsonpCallback
-	}
+		}
+	};
+
 	function _jsonp(url, jsonpCallbackKeyName, successCallback, errorCallback){
          $.ajax({
 	         type: "get",
@@ -65,7 +68,7 @@ App.service('MusicApiService', function ($q, $http, $base64) {
             return promise;
         }
         return promise;
-    };
+    }
 
 	function doSearch(keyword) {
         var deferred = $q.defer();
@@ -96,7 +99,7 @@ App.service('MusicApiService', function ($q, $http, $base64) {
             return promise;
         }
         return promise;
-    };
+    }
 
 	function getLyric(songid) {
         var deferred = $q.defer();
@@ -128,15 +131,54 @@ App.service('MusicApiService', function ($q, $http, $base64) {
             return promise;
         }
         return promise;
-    };
+    }
+
+    function getAudioUrl(songid){
+        var deferred = $q.defer();
+        var promise = deferred.promise;
+
+        var result = {};
+        //ajax请求
+        get_vk_url = api.getAudioTokenUrl(songid);
+        console.log('[start] fetch audio vkey: GET ', get_vk_url);
+
+        _jsonp(get_vk_url, "callback",
+            function (response) {
+                console.log('[finish] fetch audio vkey, return: ', response);
+                if(response.code==0){
+                    var vk = response.data.items[0].vkey;
+                    console.log('get audio vkey:', vk);
+                    var musicURL = "http://ws.stream.qqmusic.qq.com/C400"
+                      + songid + ".m4a?fromtag=0&guid=126548448&vkey="+vk;
+
+                    deferred.resolve(musicURL);
+                } else {
+                    deferred.reject('fail to fetch token');
+                }
+            },
+            function(response){
+                deferred.reject('fail to fetch audio token');
+            }
+        );
+
+        promise.success = function (fn) {
+            promise.then(fn);
+            return promise;
+        }
+        promise.error = function (fn) {
+            promise.then(null, fn);
+            return promise;
+        }
+        return promise;
+    }
 
     return {
-        'getHotSearchList':getHotSearchList,
-        'doSearch':doSearch,
-        'getLyric':getLyric,
-        'getPictureUrl':api.getPictureUrl,
-        'getAudioUrl':api.getAudioUrl
-    }
+        'getHotSearchList': getHotSearchList,
+        'doSearch': doSearch,
+        'getLyric': getLyric,
+        'getPictureUrl': api.getPictureUrl,
+        'getAudioUrl': getAudioUrl
+    };
 
  });
 
